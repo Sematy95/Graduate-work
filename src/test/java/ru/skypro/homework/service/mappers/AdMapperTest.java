@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AdMapperTest {
 
     private AdMapper mapper = Mappers.getMapper(AdMapper.class);
-    Ad ad = new Ad(1,"title","d","i",2,new User(1,"Oleg24","123456","Oleg","Smagin","+79215600890","email@mail.ru", Role.USER,"112"));
+    Ad ad = new Ad(1,"title","d","i",2,new User(1,"123456","Oleg","Smagin","+79215600890","email@mail.ru", Role.USER,"112"));
 
 
     @Test

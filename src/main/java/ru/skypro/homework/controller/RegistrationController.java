@@ -12,18 +12,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.user.RegisterDto;
 import ru.skypro.homework.service.AuthService;
+
+/**
+ * This controller provides endpoint for user's registration
+ */
 @Slf4j
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
 @Tag(name = "Регистрация")
-@RequestMapping("/register")
+
 public class RegistrationController {
 
     private final AuthService authService;
-
     public RegistrationController(AuthService authService) {
         this.authService = authService;
     }
+    /**
+     * User's registration
+     * @param registerDto User's DTO for registration
+     * @return ResponseEntity containing the registration status
+     * HTTP 200 (OK): User was created.
+     * HTTP 400 (Unauthorized): if registration fails.
+     *
+     */
     @Operation(
             tags = "Регистрация",
             summary = "Регистрация пользователя",

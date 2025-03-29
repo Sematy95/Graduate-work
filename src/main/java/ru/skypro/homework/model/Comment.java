@@ -8,7 +8,8 @@ import java.util.Objects;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_seq")
+    @SequenceGenerator(name = "comment_seq", allocationSize = 1)
     private int pk;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,8 +26,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(int pk, User author, String text, long createdAt, Ad ad) {
-        this.pk = pk;
+    public Comment(User author, String text, long createdAt, Ad ad) {
         this.author = author;
         this.text = text;
         this.createdAt = createdAt;
@@ -35,10 +35,6 @@ public class Comment {
 
     public int getPk() {
         return pk;
-    }
-
-    public void setPk(int pk) {
-        this.pk = pk;
     }
 
     public User getAuthor() {
@@ -78,7 +74,7 @@ public class Comment {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Comment comment = (Comment) object;
-        return pk == comment.pk && createdAt == comment.createdAt && Objects.equals(author, comment.author) && Objects.equals(text, comment.text) && Objects.equals(ad, comment.ad);
+        return createdAt == comment.createdAt && Objects.equals(author, comment.author) && Objects.equals(text, comment.text) && Objects.equals(ad, comment.ad);
     }
 
     @Override
