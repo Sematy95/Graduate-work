@@ -14,6 +14,8 @@ import ru.skypro.homework.dto.comment.CommentsDto;
 import ru.skypro.homework.dto.comment.CreateOrUpdateCommentDto;
 import ru.skypro.homework.service.CommentService;
 
+import javax.validation.Valid;
+
 import static ru.skypro.homework.security.RoleAuthority.USER;
 import static ru.skypro.homework.security.RoleAuthority.ADMIN;
 
@@ -56,18 +58,10 @@ public class CommentController {
             },
             operationId = "getComments",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Not found")
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
             }
-
-
     )
     @GetMapping("{id}/comments")
     public ResponseEntity<CommentsDto> getComments(@PathVariable("id") int id) {
@@ -105,21 +99,14 @@ public class CommentController {
             },
             operationId = "postComment",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Not found")
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
             }
-
-
     )
     @PostMapping("{id}/comments")
-    public ResponseEntity<CreateOrUpdateCommentDto> postComment(@PathVariable("id") int id, @RequestBody CreateOrUpdateCommentDto text) {
+    public ResponseEntity<CreateOrUpdateCommentDto> postComment(@PathVariable("id") int id,
+                                                                @RequestBody CreateOrUpdateCommentDto text) {
         return ResponseEntity.ok(commentService.postComment(id, text.getText()));
     }
 
@@ -154,25 +141,16 @@ public class CommentController {
             },
             operationId = "deleteComment",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Not found")
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
             }
-
-
     )
     @DeleteMapping("{adId}/comments/{commentId}")
-    public void deleteComment(@PathVariable("adId") int adId, @PathVariable("commentId") int commentId) {
+    public ResponseEntity<Void>  deleteComment(@PathVariable("adId") int adId, @PathVariable("commentId") int commentId) {
         commentService.deleteComment(adId, commentId);
+       return ResponseEntity.noContent().build();
     }
 
     /**
@@ -213,25 +191,16 @@ public class CommentController {
             },
             operationId = "patchComment",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Not found")
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "404", description = "Not found")
             }
-
-
     )
     @PatchMapping("{adId}/comments/{commentId}")
-    public ResponseEntity<CreateOrUpdateCommentDto> patchComment(@PathVariable("adId") int adId, @PathVariable("commentId") int commentId, @RequestBody String text) {
+    public ResponseEntity<CreateOrUpdateCommentDto> patchComment(@PathVariable("adId") int adId,
+                                                                 @PathVariable("commentId") int commentId,
+                                                                 @RequestBody @Valid String text) {
         return ResponseEntity.ok(commentService.patchComment(adId, commentId, text));
     }
-
 }

@@ -59,21 +59,16 @@ public class UsersController {
             ),
             operationId = "setPassword",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "ok"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"),
-                    @ApiResponse(
-                            responseCode = "403",
-                            description = "Forbidden")
+                    @ApiResponse(responseCode = "200", description = "ok"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden")
 
             }
     )
     @PostMapping("/users/set_password")
-    public void setPassword(@RequestBody SetPasswordDto setPassword) {
+    public ResponseEntity<Void> setPassword(@RequestBody SetPasswordDto setPassword) {
         usersService.setPassword(setPassword);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -88,18 +83,13 @@ public class UsersController {
             summary = "Получение информации об авторизованном пользователе",
             operationId = "getUser",
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = UserDto.class)
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"
+                    @ApiResponse(responseCode = "200", description = "OK", content
+                            = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GetUserDto.class)
                     )
+                    ),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
             }
 
     )
@@ -121,25 +111,21 @@ public class UsersController {
             tags = "Пользователи",
             summary = "Обновление информации об авторизованном пользователе",
             operationId = "updateUser",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = UpdateUserDto.class))
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content
+                    = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = UpdateUserDto.class))
             ),
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK",
+                    @ApiResponse(responseCode = "200", description = "OK",
                             content = @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = UpdateUserDto.class))),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized")
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
             }
     )
-    public UserDto updateUser(@RequestBody UpdateUserDto updateUserDto) {
-        return usersService.updateUserInfo(updateUserDto);
+    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUserDto updateUserDto) {
+        return ResponseEntity.ok(usersService.updateUserInfo(updateUserDto));
     }
 
     /**
@@ -159,12 +145,8 @@ public class UsersController {
                     )
             ),
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized")
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
             }
     )
     @PatchMapping(value = "/users/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

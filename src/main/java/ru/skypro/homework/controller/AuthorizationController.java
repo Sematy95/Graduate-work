@@ -51,14 +51,8 @@ public class AuthorizationController {
                     )
             ),
             responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "OK"
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"
-                    )
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
             })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {

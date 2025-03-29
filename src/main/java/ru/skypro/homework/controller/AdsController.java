@@ -22,6 +22,7 @@ import ru.skypro.homework.dto.ad.ExtendedAd;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,13 +42,8 @@ import static ru.skypro.homework.security.RoleAuthority.USER;
         description = "Интерфейс для управления объявлениями о продаже"
 )
 @ApiResponses(value = {
-        @ApiResponse(
-                responseCode = "401",
-                description = "UNAUTHORIZED: не авторизован"),
-        @ApiResponse(
-                responseCode = "500",
-                description = "INTERNAL_SERVER_ERROR: ошибка сервера при обработке запроса"
-        )
+        @ApiResponse(responseCode = "401", description = "UNAUTHORIZED: не авторизован"),
+        @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR: ошибка сервера при обработке запроса")
 })
 public class AdsController {
 
@@ -70,12 +66,11 @@ public class AdsController {
      */
     @Operation(summary = "Получение всех объявлений")
     @ApiResponse(
-            responseCode = "200",
-            description = "OK",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    array = @ArraySchema(schema = @Schema(implementation = Ads.class))
-            )
+            responseCode = "200", description = "OK", content
+            = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            array = @ArraySchema(schema = @Schema(implementation = Ads.class))
+    )
     )
     @GetMapping("ads")
     public ResponseEntity<Ads> getAll() {
@@ -101,15 +96,16 @@ public class AdsController {
      * @throws IOException If an I/O error occurs during image processing.
      */
     @Operation(summary = "Добавление объявления")
-    @ApiResponse(responseCode = "201",
-            description = "Created",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = AdDto.class)
-            )
+    @ApiResponse(responseCode = "201", description = "Created", content
+            = @Content(
+            mediaType = MediaType.APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = AdDto.class)
     )
-    @PostMapping(value = "ads", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<AdDto> createAd(@RequestPart CreateOrUpdateAdDto properties, @RequestPart MultipartFile image) throws IOException {
+    )
+    @PostMapping(value = "ads", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<AdDto> createAd(
+            @RequestPart @Valid CreateOrUpdateAdDto properties,
+            @RequestPart MultipartFile image) throws IOException {
         return ResponseEntity.ok(adService.addAd(properties, image));
     }
 
@@ -129,22 +125,12 @@ public class AdsController {
      */
     @Operation(summary = "Получение информации об объявлении")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ExtendedAd.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
+            @ApiResponse(responseCode = "200", description = "OK", content
+                    = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ExtendedAd.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
     @GetMapping("ads/{id}")
     public ResponseEntity<ExtendedAd> getAdInfo(@PathVariable("id") Integer id) {
@@ -170,23 +156,16 @@ public class AdsController {
      */
     @Operation(summary = "Удаление объявления")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "No content"),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
+            @ApiResponse(responseCode = "204", description = "No content"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not found"
             )
     })
     @DeleteMapping("ads/{id}")
-    public void deleteAd(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAd(@PathVariable Integer id) {
         adService.deleteAd(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -207,29 +186,17 @@ public class AdsController {
      */
     @Operation(summary = "Обновление информации об объявлении")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = AdDto.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
+            @ApiResponse(responseCode = "200", description = "OK", content
+                    = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = AdDto.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
     @PatchMapping("ads/{id}")
-    public ResponseEntity<AdDto> updateAd(@PathVariable Integer id, @RequestBody CreateOrUpdateAdDto ad) {
+    public ResponseEntity<AdDto> updateAd(@PathVariable Integer id,
+                                          @RequestBody @Valid CreateOrUpdateAdDto ad) {
         return ResponseEntity.ok(adService.updateAd(id, ad));
     }
 
@@ -247,18 +214,10 @@ public class AdsController {
      */
     @Operation(summary = "Получение объявлений авторизованного пользователя")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = Ads.class))
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            )
+            @ApiResponse(responseCode = "200", description = "OK", content
+                    = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @GetMapping("ads/me")
     public ResponseEntity<Ads> getUsersAds() {
@@ -287,33 +246,17 @@ public class AdsController {
      */
     @Operation(summary = "Обновление картинки объявления")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
+            @ApiResponse(responseCode = "200", description = "OK", content
+                    = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not found")
     })
     @PatchMapping(value = "ads/{id}/image")
-    public ResponseEntity<?> updateAdImage(
-            @PathVariable("id") Integer id,
-            @RequestBody MultipartFile image
-    ) throws IOException {
-        adService.updateImage(id,image);
+    public ResponseEntity<Void> updateAdImage(@PathVariable("id") Integer id,
+                                              @RequestBody MultipartFile image) throws IOException {
+        adService.updateImage(id, image);
         return ResponseEntity.ok().build();
     }
 

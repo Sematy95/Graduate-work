@@ -24,36 +24,31 @@ import ru.skypro.homework.service.AuthService;
 public class RegistrationController {
 
     private final AuthService authService;
+
     public RegistrationController(AuthService authService) {
         this.authService = authService;
     }
+
     /**
      * User's registration
+     *
      * @param registerDto User's DTO for registration
      * @return ResponseEntity containing the registration status
      * HTTP 200 (OK): User was created.
      * HTTP 400 (Unauthorized): if registration fails.
-     *
      */
     @Operation(
             tags = "Регистрация",
             summary = "Регистрация пользователя",
             operationId = "register",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = RegisterDto.class)
                     )
             ),
             responses = {
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Created"
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Bad Request"
-                    )
+                    @ApiResponse(responseCode = "201", description = "Created"),
+                    @ApiResponse(responseCode = "400", description = "Bad Request")
 
             })
     @PostMapping("/register")
