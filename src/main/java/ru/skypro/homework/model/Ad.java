@@ -8,7 +8,8 @@ import java.util.*;
 public class Ad {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ad_seq")
+    @SequenceGenerator(name = "ad_seq", allocationSize = 1)
     private int pk;
 
     private String title;
@@ -26,8 +27,7 @@ public class Ad {
     public Ad() {
     }
 
-    public Ad(int pk, String title, String description, String image, int price, User author) {
-        this.pk = pk;
+    public Ad(String title, String description, String image, int price, User author) {
         this.title = title;
         this.description = description;
         this.image = image;

@@ -9,16 +9,15 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "user_data")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_data_seq")
+    @SequenceGenerator(name = "user_data_seq", allocationSize = 1)
     private int id;
-
-    @Size(min = 4, max = 32)
-    private String username;
 
     @Size(min = 8, max = 16)
     private String password;
@@ -50,29 +49,21 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String password, String firstName, String lastName, String phone, String email, Role role, String image) {
+    public User(int id, String password, String firstName, String lastName, String phone, String email, Role role, String image) {
         this.id = id;
-        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.role = role;
-        this.image = image;
+        this.image = "no_image";
     }
 
     public int getId() {
         return id;
     }
 
-    public @Size(min = 4, max = 32) String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@Size(min = 4, max = 32) String username) {
-        this.username = username;
-    }
 
     public @Size(min = 8, max = 16) String getPassword() {
         return password;
@@ -135,19 +126,18 @@ public class User {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         User user = (User) object;
-        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(email, user.email) && role == user.role;
+        return id == user.id && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(email, user.email) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, firstName, lastName, phone, email, role);
+        return Objects.hash(id, password, firstName, lastName, phone, email, role);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

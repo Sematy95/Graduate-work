@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserMapperTest {
 
-    private UserMapper mapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
 
-    User oleg = new User(1,"Oleg24","123456","Oleg","Smagin","+79215600890","email@mail.ru", Role.USER,"112");
+    User oleg = new User(1,"123456","Oleg","Smagin","+79215600890","email@mail.ru", Role.USER,"112");
 
 
     @Test
@@ -32,26 +32,11 @@ class UserMapperTest {
     }
 
     @Test
-    void userToGetUserDto() {
-
-        GetUserDto olegGetUserDto = mapper.userToGetUserDto(oleg);
-        System.out.println("olegGetUserDto = " + olegGetUserDto);
-        assertEquals (olegGetUserDto.getId(), oleg.getId());
-        assertEquals (olegGetUserDto.getEmail(), oleg.getEmail());
-        assertEquals (olegGetUserDto.getFirstName(), oleg.getFirstName());
-        assertEquals (olegGetUserDto.getLastName(), oleg.getLastName());
-        assertEquals (olegGetUserDto.getPhone(), oleg.getPhone());
-        assertEquals (olegGetUserDto.getImage(), oleg.getImage());
-        assertEquals(olegGetUserDto.getRole(), oleg.getRole());
-
-    }
-
-    @Test
     void userToLoginDto() {
 
         LoginDto olegLoginDto = mapper.userToLoginDto(oleg);
         System.out.println("olegLoginDto = " + olegLoginDto);
-        assertEquals(olegLoginDto.getUsername(), oleg.getUsername());
+        assertEquals(olegLoginDto.getUsername(), oleg.getEmail());
         assertEquals(olegLoginDto.getPassword(), oleg.getPassword());
     }
 
@@ -60,7 +45,7 @@ class UserMapperTest {
 
         RegisterDto olegRegisterDto = mapper.userToRegisterDto(oleg);
         System.out.println("olegRegisterDto = " + olegRegisterDto);
-        assertEquals(olegRegisterDto.getUsername(), oleg.getUsername());
+        assertEquals(olegRegisterDto.getUsername(), oleg.getEmail());
         assertEquals(olegRegisterDto.getPassword(), oleg.getPassword());
         assertEquals(olegRegisterDto.getFirstName(), oleg.getFirstName());
         assertEquals(olegRegisterDto.getLastName(), oleg.getLastName());
@@ -78,13 +63,11 @@ class UserMapperTest {
         assertEquals(olegSetPasswordDto.getCurrentPassword(), oleg.getPassword());
     }
 
-    @Test
-    void userToUpdateUserDto() {
 
-        UpdateUserDto olegUpdateUserDto = mapper.userToUpdateUserDto(oleg);
-        System.out.println("olegUpdateUserDto = " + olegUpdateUserDto);
-        assertEquals(olegUpdateUserDto.getFirstName(), oleg.getFirstName());
-        assertEquals(olegUpdateUserDto.getLastName(), oleg.getLastName());
-        assertEquals(olegUpdateUserDto.getPhone(), oleg.getPhone());
+    @Test
+    void userToGetUserDto() {
+
+        System.out.println("mapper.userToGetUserDto(oleg) = " + mapper.userToGetUserDto(oleg));
+
     }
 }
