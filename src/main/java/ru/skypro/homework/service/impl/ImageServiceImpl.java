@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @Data
 public class ImageServiceImpl {
 
 
-    public ResponseEntity<byte[]> getImageAsBytes;
+    public byte[] getImageAsBytes;
 
     private UserRepository userRepository;
     private AdRepository adRepository;
@@ -40,17 +42,17 @@ public class ImageServiceImpl {
 
         Path imagePath = Paths.get(path);
         try {
-            createDirectoryIfNotExist(); //  create directory with replacing old image
+            createDirectoryIfNotExist(); //  create directory
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error(e.getMessage());
         }
-        String imageName = UUID.randomUUID() + "-" + image.getOriginalFilename(); //create name for new image
+        String imageName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
-        Path filePath = Path.of(imagePath.toString(), imageName); // create final path with created image name
+        Path filePath = Path.of(imagePath.toString(), imageName);
         try {
-            image.transferTo(filePath); // copy image to created directory with replacing old image
+            image.transferTo(filePath);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return imageName;
     }
@@ -61,18 +63,17 @@ public class ImageServiceImpl {
         try {
             Files.deleteIfExists(finalImagePath);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
     public void deleteAdImage(Ad ad) {
         Path imagePath = Paths.get(path);
         Path finalImagePath = Path.of(imagePath.toString(), ad.getImage());
-        ;
         try {
             Files.deleteIfExists(finalImagePath);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

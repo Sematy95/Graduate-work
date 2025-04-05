@@ -54,9 +54,6 @@ public class AdServiceImpl implements AdService {
         List<AdDto> ads = adRepository.findAll().stream()
                 .map(ad -> adMapper.adToAdDto(ad, "/ads/images/"))
                 .toList();
-        if (ads.isEmpty()) {
-            throw new NoAdsExistException();
-        }
 
         return new Ads(
                 ads.size(),

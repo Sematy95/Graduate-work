@@ -36,6 +36,7 @@ import static ru.skypro.homework.security.RoleAuthority.USER;
  */
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
+@RequestMapping("/ads")
 @Slf4j
 @Tag(
         name = "Объявления",
@@ -72,11 +73,11 @@ public class AdsController {
             array = @ArraySchema(schema = @Schema(implementation = Ads.class))
     )
     )
-    @GetMapping("ads")
+    @GetMapping()
     public ResponseEntity<Ads> getAll() {
         Ads ads = adService.getAllAds();
         ads.setResults(ads.getResults().stream()
-                .peek(ad -> ad.setImage("ads/images/" + ad.getPk()))
+                .peek(ad -> ad.setImage("/ads/images/" + ad.getPk()))
                 .toList());
         return ResponseEntity.ok(ads);
     }
@@ -102,7 +103,7 @@ public class AdsController {
             schema = @Schema(implementation = AdDto.class)
     )
     )
-    @PostMapping(value = "ads", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AdDto> createAd(
             @RequestPart @Valid CreateOrUpdateAdDto properties,
             @RequestPart MultipartFile image) throws IOException {
@@ -132,7 +133,7 @@ public class AdsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @GetMapping("ads/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ExtendedAd> getAdInfo(@PathVariable("id") Integer id) {
         ExtendedAd extendedAd = adService.getAd(id);
         extendedAd.setImage("ads/images/" + extendedAd.getPk());
@@ -162,7 +163,7 @@ public class AdsController {
             @ApiResponse(responseCode = "404", description = "Not found"
             )
     })
-    @DeleteMapping("ads/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAd(@PathVariable Integer id) {
         adService.deleteAd(id);
         return ResponseEntity.noContent().build();
@@ -194,7 +195,7 @@ public class AdsController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @PatchMapping("ads/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<AdDto> updateAd(@PathVariable Integer id,
                                           @RequestBody @Valid CreateOrUpdateAdDto ad) {
         return ResponseEntity.ok(adService.updateAd(id, ad));
@@ -219,11 +220,11 @@ public class AdsController {
                     array = @ArraySchema(schema = @Schema(implementation = Ads.class)))),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @GetMapping("ads/me")
+    @GetMapping("/me")
     public ResponseEntity<Ads> getUsersAds() {
         Ads ads = adService.getAdsMe();
         ads.setResults(ads.getResults().stream()
-                .peek(ad -> ad.setImage("ads/images/" + ad.getPk()))
+                .peek(ad -> ad.setImage("/ads/images/" + ad.getPk()))
                 .toList());
         return ResponseEntity.ok(ads);
     }
@@ -253,14 +254,14 @@ public class AdsController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not found")
     })
-    @PatchMapping(value = "ads/{id}/image")
+    @PatchMapping(value = "/{id}/image")
     public ResponseEntity<Void> updateAdImage(@PathVariable("id") Integer id,
                                               @RequestBody MultipartFile image) throws IOException {
         adService.updateImage(id, image);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "ads/images/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
+    @GetMapping(value = "/images/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
     public byte[] getImage(@PathVariable("id") int id) throws IOException {
         return adService.getAdImage(id);
     }

@@ -23,7 +23,7 @@ import static ru.skypro.homework.security.RoleAuthority.ADMIN;
  * This controller provides endpoint for managing comments
  */
 @RestController
-@RequestMapping("ads")
+@RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")
 public class CommentController {
 
@@ -63,7 +63,7 @@ public class CommentController {
                     @ApiResponse(responseCode = "404", description = "Not found")
             }
     )
-    @GetMapping("{id}/comments")
+    @GetMapping("/{id}/comments")
     public ResponseEntity<CommentsDto> getComments(@PathVariable("id") int id) {
         return ResponseEntity.ok(commentService.getComments(id));
     }
@@ -104,7 +104,7 @@ public class CommentController {
                     @ApiResponse(responseCode = "404", description = "Not found")
             }
     )
-    @PostMapping("{id}/comments")
+    @PostMapping("/{id}/comments")
     public ResponseEntity<CreateOrUpdateCommentDto> postComment(@PathVariable("id") int id,
                                                                 @RequestBody CreateOrUpdateCommentDto text) {
         return ResponseEntity.ok(commentService.postComment(id, text.getText()));
@@ -147,7 +147,7 @@ public class CommentController {
                     @ApiResponse(responseCode = "404", description = "Not found")
             }
     )
-    @DeleteMapping("{adId}/comments/{commentId}")
+    @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<Void>  deleteComment(@PathVariable("adId") int adId, @PathVariable("commentId") int commentId) {
         commentService.deleteComment(adId, commentId);
        return ResponseEntity.noContent().build();

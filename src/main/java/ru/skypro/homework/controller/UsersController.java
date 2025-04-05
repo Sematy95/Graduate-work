@@ -30,6 +30,7 @@ import static ru.skypro.homework.security.RoleAuthority.USER;
 @RestController
 @CrossOrigin(value = "http://localhost:3000")
 @Tag(name = "Пользователи")
+@RequestMapping("/users")
 
 
 public class UsersController {
@@ -65,7 +66,7 @@ public class UsersController {
 
             }
     )
-    @PostMapping("/users/set_password")
+    @PostMapping("/set_password")
     public ResponseEntity<Void> setPassword(@RequestBody SetPasswordDto setPassword) {
         usersService.setPassword(setPassword);
         return ResponseEntity.ok().build();
@@ -93,7 +94,7 @@ public class UsersController {
             }
 
     )
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<GetUserDto> getUser() {
         return ResponseEntity.ok(usersService.getAuthorizedUserInfo());
     }
@@ -106,7 +107,7 @@ public class UsersController {
      * HTTP 200 (OK): updating successful
      * HTTP 400 (Unauthorized): if user is not authorized
      */
-    @PatchMapping("/users/me")
+    @PatchMapping("/me")
     @Operation(
             tags = "Пользователи",
             summary = "Обновление информации об авторизованном пользователе",
@@ -149,14 +150,14 @@ public class UsersController {
                     @ApiResponse(responseCode = "401", description = "Unauthorized")
             }
     )
-    @PatchMapping(value = "/users/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) {
         usersService.updateUserImage(file);
         return ResponseEntity.ok().build();
     }
 
 
-    @GetMapping(value = "/users/images/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
+    @GetMapping(value = "/images/{id}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/*"})
     public byte[] getImage(@PathVariable("id") int id) throws IOException {
         return usersService.getUserImage(id);
     }

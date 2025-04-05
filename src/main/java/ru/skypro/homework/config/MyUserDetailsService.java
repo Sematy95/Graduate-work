@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UsersService;
 
 import javax.transaction.Transactional;
@@ -12,16 +13,16 @@ import javax.transaction.Transactional;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    private final UsersService usersService;
+    private final UserRepository userRepository;
 
-    public MyUserDetailsService(UsersService usersService) {
-        this.usersService = usersService;
+    public MyUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = usersService.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
         return new UserSecurityDTO(user);
     }
 }
